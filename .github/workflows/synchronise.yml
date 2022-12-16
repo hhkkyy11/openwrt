@@ -5,7 +5,7 @@
 # REPO_TOKEN密匙制作教程：https://git.io/jm.md
 #
 
-name: 创建,删除,同步
+name: 同步,创建,删除
 on:
   workflow_dispatch:
     inputs:
@@ -73,9 +73,9 @@ jobs:
       run: |
         sudo -E apt-get -qq update
         sudo -E apt-get -qq install -y git subversion git-core wget curl grep
-        wget -q https://raw.githubusercontent.com/281677160/common-main/main/bendi/tongbu.sh -O ${GITHUB_WORKSPACE}/tongbu.sh
+        wget -q https://raw.githubusercontent.com/shidahuilang/common/main/bendi/tongbu.sh -O ${GITHUB_WORKSPACE}/tongbu.sh
         if [[ $? -ne 0 ]]; then
-          curl -fsSL https://raw.githubusercontent.com/281677160/common-main/main/bendi/tongbu.sh > ${GITHUB_WORKSPACE}/tongbu.sh
+          curl -fsSL https://raw.githubusercontent.com/shidahuilang/common/main/bendi/tongbu.sh > ${GITHUB_WORKSPACE}/tongbu.sh
         fi
         if [[ `grep -c "shangyou" tongbu.sh` -eq '0' ]]; then
           echo "应用文件下载失败"
@@ -114,7 +114,7 @@ jobs:
       if: env.REPO_TOKEN  && github.event.inputs.Synchro == 'true' && env.again-fork != '0'
       run: |
         cd ${GITHUB_WORKSPACE}
-        rm -rf shangyou && git clone -b main https://github.com/281677160/autobuild.git shangyou
+        rm -rf shangyou && git clone -b main https://github.com/shidahuilang/openwrt.git shangyou
         rm -rf repogx && git clone -b main https://github.com/${{github.repository}}.git repogx
         if [[ "${{ env.again-fork }}" == "1" ]]; then
           echo "不同步,单纯消灭仓库的.bak备份文件"

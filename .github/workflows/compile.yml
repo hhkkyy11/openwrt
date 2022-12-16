@@ -4,6 +4,7 @@
 
 name: 编译主程序
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -39,7 +40,7 @@ jobs:
     - name: 读取脚本设置
       run: |
         cd ${GITHUB_WORKSPACE}
-        git clone https://github.com/hhkkyy11/common build/common
+        git clone https://github.com/shidahuilang/common build/common
         mv -f build/common/*.sh build/${{matrix.target}}/
         sudo chmod -R +x build
         if [[ -n "${{ github.event.workflow }}" ]]; then
@@ -56,8 +57,8 @@ jobs:
         if [[ -n "${{ github.event.workflow }}" ]]; then
           export CPU_SELECTIOY="$(source "${GITHUB_WORKSPACE}/build/${FOLDER_NAME}/settings.ini" && echo "${CPU_SELECTION}")"
         else
-          export CPU_PASSWORD="1234567"
-          export CPU_OPTIMIZATION="8370"
+          export CPU_PASSWORD="1671168608"
+          export CPU_OPTIMIZATION="E5"
         fi
         source build/${FOLDER_NAME}/common.sh && CPU_Priority
         
@@ -65,11 +66,6 @@ jobs:
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
-        if [[ "${{ env.SOURCE_CODE }}" == "AMLOGIC" ]]; then
-          docker rmi `docker images -q`
-          sudo -E apt-get -qq remove -y --purge azure-cli ghc* zulu* llvm* firefox google* powershell openjdk* msodbcsql17 mongodb* moby* snapd* mysql*
-        fi
-        sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /usr/lib/jvm /opt/ghc /swapfile
         source ${GITHUB_WORKSPACE}/build/${{matrix.target}}/common.sh && Diy_update
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /${{ env.DIY_WORK }}

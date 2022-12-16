@@ -1,13 +1,4 @@
 #
-# 请大家记住拉取的是我的 281677160/build-actions 仓库，拉取的是其他仓库有问题，别问我，我也不清楚什么问题
-#
-# 因为SSH连接配置固件直接编译，会给github停止编译的,所以要另外触发启动编译程序
-#
-# 新注册的帐号，SSH连接服务器的时间最好不要太长，10分钟左右就退出，没设置完就再来一次或者多次应该比较好
-#
-# 运行此程序不是直接编译，是修改配置文件和触发编译，正确运行完毕后，在Actions刷新网页看看你的编译程序运行了没有
-#
-# 一般情况下都能触发启动编译的，除非没设置好密匙，或者密匙过期了，或者密匙错误之类的
 #
 # REPO_TOKEN密匙制作教程：https://git.io/jm.md
 #
@@ -31,14 +22,22 @@ on:
         type: choice
         options:
           - 'asus_rt-acrh17'
-          - 'd-team_newifi-d2'
-          - 'p2w_r619ac-128m'
+          - 'newifi-d1'
+          - 'newifi-d2'
+          - 'k2p'
           - 'x86_32'
           - 'x86_64'
+          - 'r2c'
+          - 'r2s'
+          - 'r4s'
+          - 'r5s'
           - 'xiaomi_mi-router-4a-gigabit'
           - 'xiaomi_redmi-router-ac2100'
           - 'xiaomi_redmi-router-ax6s'
+          - 'xiaomi_mi-router-3g'
           - 'xiaoyu_xy-c5'
+          - 'ax3600'
+          - 'p2w_r619ac-128m'
       CPU_SELECTION:
         description: 'CPU优选,增加编译速度'
         required: true
@@ -55,7 +54,7 @@ on:
         default: '关闭'
         type: choice
         options:
-          - '关闭'
+          - 'Telegram'
           - 'Telegram'
           - 'pushplus'
       SSH_ACTION:
@@ -134,7 +133,7 @@ jobs:
     - name: 读取脚本设置
       run: |
         cd ${GITHUB_WORKSPACE}
-        git clone https://github.com/hhkkyy11/common build/common
+        git clone https://github.com/shidahuilang/common build/common
         mv -f build/common/*.sh build/${{ env.FOLDER_NAME }}/
         chmod -R +x build
         export SOURCE_CODE="$(source "build/${{ matrix.target }}/settings.ini" && echo ${SOURCE_CODE})"
@@ -203,7 +202,7 @@ jobs:
     
     - name: SSH远程连接（制作.config配置文件）
       if: github.event.inputs.SSH_ACTION == 'true'
-      uses: danshui-git/debugger-action@main
+      uses: makebl/debugger-action@main
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
